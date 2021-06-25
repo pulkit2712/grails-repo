@@ -70,3 +70,7 @@ grails:
         defaultScope: singleton
     converters:
         encoding: UTF-8
+uberAll:
+    baseurl: "http://sandbox.uberall.com"
+    token: "aGQZ9qMJmh2QOWGmuNw0RhZvPcN4Lmt4FUFdIc4ltf6d0Bopeq2IuhyGB3ihr1P9"
+

@@ -73,6 +73,7 @@ public class LocationImpl implements LocationService {
         LocationApi locApi= genericRestService.creatClient("http://sandbox.uberall.com",LocationApi.class,"aGQZ9qMJmh2QOWGmuNw0RhZvPcN4Lmt4FUFdIc4ltf6d0Bopeq2IuhyGB3ihr1P9");
         UberAPIResponse res =locApi.getLocations(null,null,null,null).execute().body();
         int count =res.getResponse().getCount();
+        int recordPerPage=res.getResponse().getMax();
         int page =1;
         resp.addAll(t.transform(res));
         List<CompletableFuture<List<MapResponse>>> futures = new ArrayList();
@@ -90,7 +91,7 @@ public class LocationImpl implements LocationService {
                 }
                 return pageRes;
             }));
-             page=page+50;
+             page=page+recordPerPage;
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenRunAsync(() -> System.out.println("Request Execution Completed")).join();

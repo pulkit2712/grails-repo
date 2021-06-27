@@ -4,6 +4,8 @@ import com.uberall.locations.domain.request.interfaces.LocationApi;
 import com.uberall.locations.domain.response.pojos.UberAPIResponse;
 import com.uberall.locations.response.MapResponse;
 import com.uberall.locations.transformers.LocationOutputTransformer;
+import com.uberall.locations.transformers.OutputTransformer;
+import com.uberall.locations.transformers.TransformationFactory;
 import com.uberall.locations.util.GenericRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -23,11 +25,12 @@ import java.util.stream.Collectors;
 @Component
 public class LocationImpl implements LocationService {
 
-    @Autowired
-    LocationOutputTransformer t;
+
 
     @Autowired
     GenericRestService genericRestService;
+
+
 
     public String getBaseURL() {
         return baseURL;
@@ -52,7 +55,7 @@ public class LocationImpl implements LocationService {
 
 
     @Override
-    public List<MapResponse> getLocation(String size,String status,String offset,String businessId) throws IOException {
+    public List<MapResponse> getLocation(String size,String status,String offset,String businessId) throws Exception {
         List<MapResponse> rsp=null;
 
         if("ALL".equalsIgnoreCase(size)){
@@ -60,7 +63,7 @@ public class LocationImpl implements LocationService {
         }else {
             LocationApi locApi = genericRestService.creatClient(baseURL, LocationApi.class, token);
             UberAPIResponse res = locApi.getLocations(size, status, offset, businessId).execute().body();
-            //LocationOutputTransformer t= factory.getTransformer("LOCATION");
+        OutputTransformer t= TransformationFactory.getTransformer("LOCATION");
             rsp = t.transform(res);
         }
 
@@ -68,13 +71,14 @@ public class LocationImpl implements LocationService {
     }
 
 
-    public List<MapResponse> getAllLocations()throws IOException{
+    public List<MapResponse> getAllLocations() throws Exception {
         List<MapResponse> resp=new ArrayList<>();
         LocationApi locApi= genericRestService.creatClient(baseURL,LocationApi.class,token);
         UberAPIResponse res =locApi.getLocations(null,null,null,null).execute().body();
         int count =res.getResponse().getCount();
         int recordPerPage=res.getResponse().getMax();
         int page =1;
+        OutputTransformer t= TransformationFactory.getTransformer("LOCATION");
         resp.addAll(t.transform(res));
         List<CompletableFuture<List<MapResponse>>> futures = new ArrayList();
         while(page<count){

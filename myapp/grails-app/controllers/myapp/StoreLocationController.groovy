@@ -32,8 +32,8 @@ class StoreLocationController  {
                 response.status = OK.value()
                 response.contentType = csvContentService.getContentType()
                 def headers=csvContentService.getHeaders()
-                headers.forEach(response.setHeader($it.key, $it.value))
-                csvContentService.getData(params).each { String line -> outs <<"${line}\n"}
+                headers.each({ it -> response.setHeader(it.key, it.value) })
+                csvContentService.getData(params).each {  line -> outs <<"${line}\n"}
                 outs.flush()
                 outs.close()
             break

@@ -12,18 +12,18 @@ import static org.springframework.http.HttpStatus.OK
 
 @Transactional
 class CsvContentService implements ContentService  {
-    final String filename = 'location.csv'
     def locationImpl
     def HeaderMap = [
-            'Content-disposition' : 'attachment; filename=${filename}'
+            'Content-disposition' : 'attachment; filename=location.csv'
     ]
-    def csvHeader="city,keywords,lat,lan,name,openingHours,street&number,zip"
+    String csvHeader="city,keywords,lat,lan,name,openingHours,street&number,zip"
 
     def getData(GrailsParameterMap params) {
         def lines =[]
-        lines.add(csvHeader)
-        lines.add(locationImpl.getLocation(params.size,params.status,params.offset,params.businessid).findAll().collect {it-> [it.city, it.keywords, it.lat, it.lng, it.name, it.openingHours.stream().map({ k -> k.toString() }).collect(Collectors.joining("||")), it.streetAndStreetNo, it.zip].join(',') } as List<String>)
-       return lines
+
+        lines=locationImpl.getLocation(params.size,params.status,params.offset,params.businessid).findAll().collect {it-> [it.city, it.keywords, it.lat, it.lng, it.name, it.openingHours.stream().map({ k -> k.toString() }).collect(Collectors.joining("||")), it.streetAndStreetNo, it.zip].join(',') } as List<String>
+        lines.add(0,csvHeader);
+        return lines
     }
 
 

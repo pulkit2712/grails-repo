@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface LocationService {
 
-    public List<MapResponse> getLocation(String size,String status,String offset,String businessId) throws IOException;
+    public List<MapResponse> getLocation(String size,String status,String offset,String businessId) throws Exception;
 }

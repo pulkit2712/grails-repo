@@ -70,7 +70,7 @@ public class LocationImpl implements LocationService {
 
     public List<MapResponse> getAllLocations()throws IOException{
         List<MapResponse> resp=new ArrayList<>();
-        LocationApi locApi= genericRestService.creatClient("http://sandbox.uberall.com",LocationApi.class,"aGQZ9qMJmh2QOWGmuNw0RhZvPcN4Lmt4FUFdIc4ltf6d0Bopeq2IuhyGB3ihr1P9");
+        LocationApi locApi= genericRestService.creatClient(baseURL,LocationApi.class,token);
         UberAPIResponse res =locApi.getLocations(null,null,null,null).execute().body();
         int count =res.getResponse().getCount();
         int recordPerPage=res.getResponse().getMax();
@@ -120,7 +120,7 @@ public class LocationImpl implements LocationService {
 
 
      UberAPIResponse getAll(int page) throws IOException {
-        LocationApi locApi= genericRestService.creatClient("http://sandbox.uberall.com",LocationApi.class,"aGQZ9qMJmh2QOWGmuNw0RhZvPcN4Lmt4FUFdIc4ltf6d0Bopeq2IuhyGB3ihr1P9");
+        LocationApi locApi= genericRestService.creatClient(baseURL,LocationApi.class,token);
         return locApi.getLocations(null,null,String.valueOf(page),null).execute().body();
     }
 }
